@@ -1,4 +1,4 @@
-import { classify, classifyQuestion } from './classifier/index.js';
+import { classifyText, classifyQuestion } from './classifier/index.js';
 import Regex from './regex.js';
 import { escapeRegex, formatText, getAlternateSubcategory, getSubcategory, preprocessPacket, removeFormatting } from './utils.js';
 
@@ -397,9 +397,9 @@ export default class Parser {
 
     if (!alternateSubcategory && !this.modaq) {
       if (category in ALTERNATE_SUBCATEGORIES) {
-        alternateSubcategory = classify(text, { mode: 'alternate-subcategory', category });
+        alternateSubcategory = classifyText(text, { mode: 'alternate-subcategory', category });
       } else if (subcategory in SUBSUBCATEGORIES) {
-        alternateSubcategory = classify(text, { mode: 'subsubcategory', subcategory });
+        alternateSubcategory = classifyText(text, { mode: 'subsubcategory', subcategory });
       }
     }
 
