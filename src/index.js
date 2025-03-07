@@ -7,9 +7,12 @@ import SUBCAT_TO_CAT from './modules/subcat-to-cat.js';
 import SUBSUBCATEGORIES from './modules/subsubcategories.js';
 import TEN_TYPOS from './modules/ten-typos.js';
 
-import fs from 'fs';
-
-class Parser {
+/**
+ * A parser for quizbowl packets.
+ * Functions in this class may throw Errors if the input text is not formatted correctly,
+ * or log warnings using `console.warn` if the input text contains potential issues.
+ */
+export default class Parser {
   constructor ({
     hasCategoryTags,
     hasQuestionNumbers,
@@ -72,8 +75,7 @@ class Parser {
 
     const questionRawMatch = text.match(this.regex.TOSSUP_TEXT);
     if (!questionRawMatch) {
-      console.error(`No question text for tossup ${this.tossupIndex} - ${text}`);
-      process.exit(1);
+      throw new Error(`No question text for tossup ${this.tossupIndex} - ${text}`);
     }
 
     let questionRaw = questionRawMatch[0];
@@ -82,8 +84,7 @@ class Parser {
     questionRaw = questionRaw.trim();
 
     if (questionRaw.length === 0) {
-      console.error(`Tossup ${this.tossupIndex} question text is empty - ${text}`);
-      process.exit(1);
+      throw new Error(`Tossup ${this.tossupIndex} question text is empty - ${text}`);
     }
 
     if ((questionRaw.match(/\(\*\)/g) || []).length >= 2) {
@@ -122,8 +123,7 @@ class Parser {
     const answerRawMatch = text.match(this.regex.TOSSUP_ANSWER);
 
     if (!answerRawMatch) {
-      console.error(`Cannot find answer for tossup ${this.tossupIndex} - ${text}`);
-      process.exit(1);
+      throw new Error(`Cannot find answer for tossup ${this.tossupIndex} - ${text}`);
     }
 
     let answerRaw = answerRawMatch[0];
@@ -196,8 +196,7 @@ class Parser {
     const leadinRawMatch = text.match(this.regex.BONUS_LEADIN);
 
     if (!leadinRawMatch) {
-      console.error(`Cannot find leadin for bonus ${this.bonusIndex} - ${text}`);
-      process.exit(2);
+      throw new Error(`Cannot find leadin for bonus ${this.bonusIndex} - ${text}`);
     }
 
     let leadinRaw = leadinRawMatch[0];
@@ -227,8 +226,7 @@ class Parser {
     const partsRawMatches = text.match(this.regex.BONUS_PARTS) || [];
 
     if (partsRawMatches.length === 0) {
-      console.error(`No parts found for bonus ${this.bonusIndex} - ${text}`);
-      process.exit(2);
+      throw new Error(`No parts found for bonus ${this.bonusIndex} - ${text}`);
     }
 
     const partsRaw = partsRawMatches.map(part => part.replace(/\n/g, ' ').trim());
@@ -238,8 +236,7 @@ class Parser {
     const answersRawMatches = (text + '\n[10]').match(this.regex.BONUS_ANSWERS) || [];
 
     if (answersRawMatches.length === 0) {
-      console.error(`No answers found for bonus ${this.bonusIndex} - ${text}`);
-      process.exit(2);
+      throw new Error(`No answers found for bonus ${this.bonusIndex} - ${text}`);
     }
 
     const answersRaw = answersRawMatches.map(answer => answer.replace(/\n/g, ' ').trim());
@@ -367,8 +364,7 @@ class Parser {
     if (categoryTag) {
       [category, subcategory, alternateSubcategory, metadata] = categoryTag;
     } else if (this.hasCategoryTags) {
-      console.error(`No category tag for ${type} ${index} - ${text}`);
-      process.exit(3);
+      throw new Error(`No category tag for ${type} ${index} - ${text}`);
     }
 
     if (this.constantCategory && this.constantSubcategory) {
@@ -381,8 +377,7 @@ class Parser {
     }
 
     if (!subcategory && this.hasCategoryTags && !this.classifyUnknown) {
-      console.error(`${type} ${index} has unrecognized subcategory ${categoryTag}`);
-      process.exit(3);
+      throw new Error(`${type} ${index} has unrecognized subcategory ${categoryTag}`);
     }
 
     if (!subcategory || (!this.hasCategoryTags && this.alwaysClassify)) {
@@ -487,7 +482,6 @@ class Parser {
 
   /**
    * Parses the packet text into tossups and bonuses.
-   *
    * @param {string} text - The packet text to parse.
    * @param {string} name - The name of the packet (optional).
    * @returns {Object} An object containing tossups and bonuses.
@@ -559,18 +553,3 @@ class Parser {
     return data;
   }
 }
-
-function main () {
-  const parser = new Parser({ hasCategoryTags: true, hasQuestionNumbers: true });
-  fs.mkdirSync('./output', { recursive: true });
-  for (const filename of fs.readdirSync('./packets')) {
-    const text = fs.readFileSync(`./packets/${filename}`, 'utf-8');
-    const data = parser.parse_packet(text, filename);
-    fs.writeFileSync(`./output/${filename.replace('.txt', '.json')}`, JSON.stringify(data));
-  }
-}
-
-// equivalent to `if __name__ == '__main__':` in Python
-let works;
-try { works = process.argv[1] === import.meta?.filename; } catch (e) { works = false; }
-if (works) { main(); }
