@@ -17,5 +17,8 @@
     "url": "https://github.com/qbreader/js-packet-parser/issues"
   },
   "homepage": "https://github.com/qbreader/js-packet-parser#readme",
-  "description": "A complete program to automatically parse quizbowl packets, such as from https://quizbowlpackets.com/, for use in https://github.com/qbreader/website."
+  "description": "A complete program to automatically parse quizbowl packets, such as from https://quizbowlpackets.com/, for use in https://github.com/qbreader/website.",
+  "devDependencies": {
+    "semistandard": "^17.0.0"
+  }
 }
