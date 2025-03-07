@@ -1,0 +1,21 @@
+{
+  "name": "js-packet-parser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qbreader/js-packet-parser.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qbreader/js-packet-parser/issues"
+  },
+  "homepage": "https://github.com/qbreader/js-packet-parser#readme",
+  "description": "A complete program to automatically parse quizbowl packets, such as from https://quizbowlpackets.com/, for use in https://github.com/qbreader/website."
+}
