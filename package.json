@@ -1,9 +1,10 @@
 {
-  "name": "js-packet-parser",
+  "name": "qb-packet-parser",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "webpack",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +21,8 @@
   "homepage": "https://github.com/qbreader/js-packet-parser#readme",
   "description": "A complete program to automatically parse quizbowl packets, such as from https://quizbowlpackets.com/, for use in https://github.com/qbreader/website.",
   "devDependencies": {
-    "semistandard": "^17.0.0"
+    "semistandard": "^17.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }
