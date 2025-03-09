@@ -33,7 +33,7 @@ export const ALTERNATE_SUBCATEGORIES = {
 };
 
 export const SUBSUBCATEGORIES = {
-  Science: ['Astronomy', 'Computer Science', 'Earth Science', 'Engineering', 'Math', 'Misc Science'],
-  'Fine Arts': ['Architecture', 'Dance', 'Film', 'Jazz', 'Musicals', 'Opera', 'Photography', 'Misc Arts'],
+  'Other Science': ['Astronomy', 'Computer Science', 'Earth Science', 'Engineering', 'Math', 'Misc Science'],
+  'Other Fine Arts': ['Architecture', 'Dance', 'Film', 'Jazz', 'Musicals', 'Opera', 'Photography', 'Misc Arts'],
   'Social Science': ['Anthropology', 'Economics', 'Linguistics', 'Psychology', 'Sociology', 'Other Social Science']
 };

@@ -1,15 +1,18 @@
+import convertDocx from './src/converters/docx.js';
 import Parser from './src/index.js';
 
 import fs from 'fs';
 
-function main () {
-  const parser = new Parser({ hasCategoryTags: true, hasQuestionNumbers: true });
+async function main () {
+  const parser = new Parser({ hasCategoryTags: true, hasQuestionNumbers: false });
+  fs.mkdirSync('./packets', { recursive: true });
   fs.mkdirSync('./output', { recursive: true });
-  for (const filename of fs.readdirSync('./packets')) {
-    const text = fs.readFileSync(`./packets/${filename}`, 'utf-8');
+  for (const filename of fs.readdirSync('./p-docx')) {
+    const text = await convertDocx({ path: `./p-docx/${filename}` });
+    fs.writeFileSync(`./packets/${filename.replace('.docx', '.txt')}`, text);
     try {
       const data = parser.parse_packet(text, filename);
-      fs.writeFileSync(`./output/${filename.replace('.txt', '.json')}`, JSON.stringify(data));
+      fs.writeFileSync(`./output/${filename.replace('.docx', '.json')}`, JSON.stringify(data));
     } catch (e) {
       console.error(`Error parsing ${filename}: ${e.message}`);
     }

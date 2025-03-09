@@ -396,9 +396,9 @@ export default class Parser {
     }
 
     if (!alternateSubcategory && !this.modaq) {
-      if (category in ALTERNATE_SUBCATEGORIES) {
+      if (Object.prototype.hasOwnProperty.call(ALTERNATE_SUBCATEGORIES, category)) {
         alternateSubcategory = classifyText(text, { mode: 'alternate-subcategory', category });
-      } else if (subcategory in SUBSUBCATEGORIES) {
+      } else if (Object.prototype.hasOwnProperty.call(SUBSUBCATEGORIES, subcategory)) {
         alternateSubcategory = classifyText(text, { mode: 'subsubcategory', subcategory });
       }
     }
