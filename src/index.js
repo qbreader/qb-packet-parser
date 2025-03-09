@@ -2,10 +2,9 @@ import { classifyText, classifyQuestion } from './classifier/index.js';
 import Regex from './regex.js';
 import { escapeRegex, formatText, getAlternateSubcategory, getSubcategory, preprocessPacket, removeFormatting } from './utils.js';
 
-import ALTERNATE_SUBCATEGORIES from './modules/alternate-subcategories.js';
-import SUBCAT_TO_CAT from './modules/subcat-to-cat.js';
-import SUBSUBCATEGORIES from './modules/subsubcategories.js';
-import TEN_TYPOS from './modules/ten-typos.js';
+import { ALTERNATE_SUBCATEGORIES, SUBSUBCATEGORIES } from './constants/categories.js';
+import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
+import TEN_TYPOS from './constants/ten-typos.js';
 
 /**
  * A parser for quizbowl packets.

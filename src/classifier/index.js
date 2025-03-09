@@ -1,4 +1,4 @@
-import { ALTERNATE_SUBCATEGORIES, SUBCATEGORIES, SUBCATEGORY_TO_CATEGORY, SUBSUBCATEGORIES } from './categories.js';
+import { ALTERNATE_SUBCATEGORIES, SUBCATEGORIES, SUBCATEGORY_TO_CATEGORY, SUBSUBCATEGORIES } from '../constants/categories.js';
 import CLASSIFIER_ALTERNATE_SUBCATEGORY from './classifier-alternate-subcategory.js';
 import CLASSIFIER_SUBCATEGORY from './classifier-subcategory.js';
 import CLASSIFIER_SUBSUBCATEGORY from './classifier-subsubcategory.js';

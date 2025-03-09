@@ -1,6 +1,6 @@
-import ANSWER_TYPOS from './modules/answer-typos.js';
-import STANDARDIZE_ALTERNATE_SUBCATS from './modules/standardize-alternate-subcats.js';
-import STANDARDIZE_SUBCATS from './modules/standardize-subcats.js';
+import ANSWER_TYPOS from './constants/answer-typos.js';
+import STANDARDIZE_ALTERNATE_SUBCATS from './constants/standardize-alternate-subcats.js';
+import STANDARDIZE_SUBCATS from './constants/standardize-subcats.js';
 
 /**
  * Source: https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
