@@ -1,4 +1,3 @@
-import convertDocx from './src/converters/docx.js';
 import Parser from './src/index.js';
 
 import fs from 'fs';
@@ -8,11 +7,10 @@ async function main () {
   fs.mkdirSync('./packets', { recursive: true });
   fs.mkdirSync('./output', { recursive: true });
   for (const filename of fs.readdirSync('./p-docx')) {
-    const text = await convertDocx({ path: `./p-docx/${filename}` });
-    fs.writeFileSync(`./packets/${filename.replace('.docx', '.txt')}`, text);
     try {
-      const data = parser.parsePacket(text, filename);
+      const { data, warnings } = await parser.parseDocxPacket(`./p-docx/${filename}`, filename);
       fs.writeFileSync(`./output/${filename.replace('.docx', '.json')}`, JSON.stringify(data));
+      if (warnings.length > 0) { console.warn(warnings); }
     } catch (e) {
       console.error(`Error parsing ${filename}: ${e.message}`);
     }

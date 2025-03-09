@@ -5,11 +5,12 @@ import { escapeRegex, formatText, getAlternateSubcategory, getSubcategory, prepr
 import { ALTERNATE_SUBCATEGORIES, SUBSUBCATEGORIES } from './constants/categories.js';
 import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
 import TEN_TYPOS from './constants/ten-typos.js';
+import convertDocx from './converters/docx.js';
 
 /**
  * A parser for quizbowl packets.
  * Functions in this class may throw Errors if the input text is not formatted correctly,
- * or log warnings using `console.warn` if the input text contains potential issues.
+ * or log warnings using `this.warn` if the input text contains potential issues.
  */
 export default class Parser {
   constructor ({
@@ -21,9 +22,10 @@ export default class Parser {
     buzzpoints = false,
     constantSubcategory = '',
     constantAlternateSubcategory = '',
-    classifyUnknown,
-    modaq,
-    spacePowermarks
+    classifyUnknown = true,
+    modaq = false,
+    spacePowermarks = false,
+    verbose = false
   }) {
     this.hasCategoryTags = hasCategoryTags;
     this.hasQuestionNumbers = hasQuestionNumbers;
@@ -35,6 +37,8 @@ export default class Parser {
     this.classifyUnknown = classifyUnknown;
     this.modaq = modaq;
     this.spacePowermarks = spacePowermarks;
+
+    this.warnings = [];
 
     /**
      * 1-indexed
@@ -50,14 +54,19 @@ export default class Parser {
     this.constantAlternateSubcategory = constantAlternateSubcategory;
 
     if (!this.hasCategoryTags && this.constantSubcategory !== '') {
-      console.warn(`Using fixed category ${this.constantCategory} and subcategory ${this.constantSubcategory}`);
+      this.warn(`Using fixed category ${this.constantCategory} and subcategory ${this.constantSubcategory}`);
     }
 
     if (this.constantAlternateSubcategory) {
-      console.warn(`Using fixed alternate subcategory ${this.constantAlternateSubcategory}`);
+      this.warn(`Using fixed alternate subcategory ${this.constantAlternateSubcategory}`);
     }
 
     this.regex = new Regex(this.hasCategoryTags, this.hasQuestionNumbers);
+  }
+
+  warn (message) {
+    this.warnings.push(message);
+    if (this.verbose) { console.warn(message); }
   }
 
   /**
@@ -87,7 +96,7 @@ export default class Parser {
     }
 
     if ((questionRaw.match(/\(\*\)/g) || []).length >= 2) {
-      console.warn(`Tossup ${this.tossupIndex} has multiple powermarks (*)`);
+      this.warn(`Tossup ${this.tossupIndex} has multiple powermarks (*)`);
     }
 
     if (this.autoInsertPowermarks && !questionRaw.includes('(*)')) {
@@ -110,12 +119,12 @@ export default class Parser {
         questionSanitized = questionSanitized.replace(/ *\(\*\) */g, ' (*) ');
         question = question.replace(/ *\(\*\) */g, ' (*) ');
       } else {
-        console.warn(`Tossup ${this.tossupIndex} powermark (*) is not surrounded by spaces`);
+        this.warn(`Tossup ${this.tossupIndex} powermark (*) is not surrounded by spaces`);
       }
     }
 
     if (questionSanitized.toLowerCase().includes('answer:')) {
-      console.warn(`Tossup ${this.tossupIndex} question text may contain the answer`);
+      this.warn(`Tossup ${this.tossupIndex} question text may contain the answer`);
       this.tossupIndex += 1;
     }
 
@@ -132,7 +141,7 @@ export default class Parser {
     }
 
     if (answerRaw.toLowerCase().includes('answer:')) {
-      console.warn(`Tossup ${this.tossupIndex} answer may contain the next question`);
+      this.warn(`Tossup ${this.tossupIndex} answer may contain the next question`);
       this.tossupIndex += 1;
       if (!this.hasCategoryTags) {
         console.log(`\n${answerRaw}\n`);
@@ -215,7 +224,7 @@ export default class Parser {
     const leadinSanitized = removeFormatting(leadinRaw);
 
     if (leadinSanitized.toLowerCase().includes('answer:')) {
-      console.warn(`Bonus ${this.bonusIndex} leadin may contain the answer to the first part`);
+      this.warn(`Bonus ${this.bonusIndex} leadin may contain the answer to the first part`);
       this.bonusIndex += 1;
       if (!this.hasQuestionNumbers) {
         console.log(`\n${leadinRaw}\n`);
@@ -246,22 +255,22 @@ export default class Parser {
     const answersSanitized = processedAnswersRaw.map(answer => removeFormatting(answer));
 
     if (partsRaw.length !== answersRaw.length) {
-      console.warn(`Bonus ${this.bonusIndex} has ${partsRaw.length} parts but ${answersRaw.length} answers`);
+      this.warn(`Bonus ${this.bonusIndex} has ${partsRaw.length} parts but ${answersRaw.length} answers`);
     }
 
     if (partsRaw.length < this.bonusLength && values.reduce((a, b) => a + b, 0) !== 30) {
-      console.warn(`Bonus ${this.bonusIndex} has fewer than ${this.bonusLength} parts`);
+      this.warn(`Bonus ${this.bonusIndex} has fewer than ${this.bonusLength} parts`);
       if (!this.hasQuestionNumbers) {
         console.log(`\n${text.slice(3)}\n`);
       }
     }
 
     if (partsRaw.length > this.bonusLength && values.reduce((a, b) => a + b, 0) !== 30) {
-      console.warn(`Bonus ${this.bonusIndex} has more than ${this.bonusLength} parts`);
+      this.warn(`Bonus ${this.bonusIndex} has more than ${this.bonusLength} parts`);
     }
 
     if (answersSanitized[answersSanitized.length - 1].toLowerCase().includes('answer:')) {
-      console.warn(`Bonus ${this.bonusIndex} answer may contain the next tossup`);
+      this.warn(`Bonus ${this.bonusIndex} answer may contain the next tossup`);
       console.log(`\n${answersSanitized[answersSanitized.length - 1]}\n`);
     }
 
@@ -337,7 +346,7 @@ export default class Parser {
   insertPowermark (text) {
     const index = text.lastIndexOf('{/b}');
     if (index < 0) {
-      console.warn(`Can't insert (*) for tossup ${this.tossupIndex} - ${text}`);
+      this.warn(`Can't insert (*) for tossup ${this.tossupIndex} - ${text}`);
     }
     return text.slice(0, index) + '(*)' + text.slice(index);
   }
@@ -386,7 +395,7 @@ export default class Parser {
       subcategory = tempSubcategory;
 
       if (this.hasCategoryTags && !alternateSubcategory) {
-        console.warn(`${type} ${index} classified as ${category} - ${subcategory}`);
+        this.warn(`${type} ${index} classified as ${category} - ${subcategory}`);
       }
 
       if (!alternateSubcategory) {
@@ -483,7 +492,10 @@ export default class Parser {
    * Parses the packet text into tossups and bonuses.
    * @param {string} text - The packet text to parse.
    * @param {string} name - The name of the packet (optional).
-   * @returns {Object} An object containing tossups and bonuses.
+   * @returns {{
+   *  data: {tossups: [], bonuses: []},
+   *  warnings: string[]
+   * }} An object containing tossups and bonuses, and any warnings.
    */
   parsePacket (text, name = '') {
     this.tossupIndex = 1;
@@ -546,9 +558,29 @@ export default class Parser {
     }
 
     if (missingDirectives > 0) {
-      console.warn(`${missingDirectives} 'description acceptable' directive(s) may not have parsed in this packet`);
+      this.warn(`${missingDirectives} 'description acceptable' directive(s) may not have parsed in this packet - consider moving any directives *after* the question number`);
     }
 
-    return data;
+    return { data, warnings: this.warnings };
+  }
+
+  /**
+   *
+   * @param {object} input - see the documentation for `convertDocx`
+   * @returns
+   */
+  async parseDocxPacket (input, name = '') {
+    // check if docx is arraybuffer
+    let text;
+    if (input instanceof ArrayBuffer) {
+      text = await convertDocx({ arrayBuffer: input });
+    } else if (input instanceof Buffer) {
+      text = await convertDocx({ buffer: input });
+    } else if (typeof input === 'string') {
+      text = await convertDocx({ path: input });
+    } else {
+      throw new Error('Invalid input type');
+    }
+    return this.parsePacket(text, name);
   }
 }

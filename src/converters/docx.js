@@ -2,13 +2,13 @@ import mammoth from 'mammoth';
 
 /**
  * Convert a .docx file to a string compatible with the parser.
- * @param {mammoth.Input} input - an object describing the source document.
+ * @param {object} input - an object describing the source document.
  * On node.js, the following inputs are supported:
- * - {path: path}, where path is the path to the .docx file.
- * - {buffer: buffer}, where buffer is a node.js Buffer containing a .docx file.
+ * - `{path: path}`, where path is the path to the .docx file.
+ * - `{buffer: buffer}`, where buffer is a node.js Buffer containing a .docx file.
  *
  * In the browser, the following inputs are supported:
- * - {arrayBuffer: arrayBuffer}, where arrayBuffer is an array buffer containing a .docx file.
+ * - `{arrayBuffer: arrayBuffer}`, where arrayBuffer is an array buffer containing a .docx file.
  *
  * See the [mammoth documentation](https://www.npmjs.com/package/mammoth#api) for more information.
  * @returns
