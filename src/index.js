@@ -65,8 +65,8 @@ export default class Parser {
    * @param {string} text
    * @returns
    */
-  parse_tossup (text) {
-    const [category, subcategory, alternateSubcategory, metadata] = this.parse_category(text, 'tossup');
+  parseTossup (text) {
+    const [category, subcategory, alternateSubcategory, metadata] = this.parseCategory(text, 'tossup');
 
     if (!this.hasCategoryTags) {
       text = text.replace(this.regex.CATEGORY_TAG, '');
@@ -91,7 +91,7 @@ export default class Parser {
     }
 
     if (this.autoInsertPowermarks && !questionRaw.includes('(*)')) {
-      questionRaw = this.insert_powermark(questionRaw);
+      questionRaw = this.insertPowermark(questionRaw);
     }
 
     if (questionRaw.startsWith('{b}{i} ')) {
@@ -179,14 +179,14 @@ export default class Parser {
    * @param {string} text
    * @returns
    */
-  parse_bonus (text) {
-    const [category, subcategory, alternateSubcategory, metadata] = this.parse_category(text, 'bonus');
+  parseBonus (text) {
+    const [category, subcategory, alternateSubcategory, metadata] = this.parseCategory(text, 'bonus');
 
     if (!this.hasCategoryTags) {
       text = text.replace(this.regex.CATEGORY_TAG, '');
     }
 
-    const [difficultyModifiers, values] = this.parse_bonus_tags(text);
+    const [difficultyModifiers, values] = this.parseBonusTags(text);
 
     for (const typo of TEN_TYPOS) {
       text = text.replace(new RegExp(escapeRegex(typo), 'gi'), '[10]');
@@ -334,7 +334,7 @@ export default class Parser {
    * @param {string} text
    * @returns
    */
-  insert_powermark (text) {
+  insertPowermark (text) {
     const index = text.lastIndexOf('{/b}');
     if (index < 0) {
       console.warn(`Can't insert (*) for tossup ${this.tossupIndex} - ${text}`);
@@ -350,7 +350,7 @@ export default class Parser {
    * @param {string} type - The type of question, either "tossup" or "bonus".
    * @returns {[string, string, string, string]} A tuple containing category, subcategory, alternate subcategory, and metadata.
    */
-  parse_category (text, type) {
+  parseCategory (text, type) {
     let category = '';
     let subcategory = '';
     let alternateSubcategory = '';
@@ -358,7 +358,7 @@ export default class Parser {
 
     const index = type === 'tossup' ? this.tossupIndex : this.bonusIndex;
 
-    const categoryTag = this.parse_category_tag(text);
+    const categoryTag = this.parseCategoryTag(text);
 
     if (categoryTag) {
       [category, subcategory, alternateSubcategory, metadata] = categoryTag;
@@ -426,7 +426,7 @@ export default class Parser {
    * @returns {[string, string, string, string] | null} A tuple containing category, subcategory,
    * alternate subcategory, and metadata, or null if no category tag is found.
    */
-  parse_category_tag (text) {
+  parseCategoryTag (text) {
     // Remove formatting and search for the category tag using the regex
     let categoryTag = removeFormatting(text).match(this.regex.CATEGORY_TAG);
 
@@ -451,7 +451,7 @@ export default class Parser {
    * @param {string} text - The text to parse the bonus tags from.
    * @returns {[Array<"e" | "m" | "h">, number[]]} A tuple containing the difficulties and values.
    */
-  parse_bonus_tags (text) {
+  parseBonusTags (text) {
     const tags = text.match(this.regex.BONUS_TAGS) || [];
     const difficultyModifiers = [];
     let values = [];
@@ -485,7 +485,7 @@ export default class Parser {
    * @param {string} name - The name of the packet (optional).
    * @returns {Object} An object containing tossups and bonuses.
    */
-  parse_packet (text, name = '') {
+  parsePacket (text, name = '') {
     this.tossupIndex = 1;
     this.bonusIndex = 1;
 
@@ -527,7 +527,7 @@ export default class Parser {
     const unsanitized = this.modaq || this.buzzpoints;
 
     for (const tossup of tossups) {
-      const tossupParsed = this.parse_tossup(tossup);
+      const tossupParsed = this.parseTossup(tossup);
       data.tossups.push(tossupParsed);
       this.tossupIndex += 1;
       const questionText = unsanitized ? tossupParsed.question : tossupParsed.question_sanitized;
@@ -535,7 +535,7 @@ export default class Parser {
     }
 
     for (const bonus of bonuses) {
-      const bonusParsed = this.parse_bonus(bonus);
+      const bonusParsed = this.parseBonus(bonus);
       data.bonuses.push(bonusParsed);
       this.bonusIndex += 1;
       const leadinText = unsanitized ? bonusParsed.leadin : bonusParsed.leadin_sanitized;

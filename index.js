@@ -11,7 +11,7 @@ async function main () {
     const text = await convertDocx({ path: `./p-docx/${filename}` });
     fs.writeFileSync(`./packets/${filename.replace('.docx', '.txt')}`, text);
     try {
-      const data = parser.parse_packet(text, filename);
+      const data = parser.parsePacket(text, filename);
       fs.writeFileSync(`./output/${filename.replace('.docx', '.json')}`, JSON.stringify(data));
     } catch (e) {
       console.error(`Error parsing ${filename}: ${e.message}`);
