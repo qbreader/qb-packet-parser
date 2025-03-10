@@ -1,10 +1,10 @@
-import Parser from './src/index.js';
+import Parser from './dist/main.node.mjs';
+// import Parser from './src/index.js';
 
 import fs from 'fs';
 
 async function main () {
   const parser = new Parser({ hasCategoryTags: true, hasQuestionNumbers: false });
-  fs.mkdirSync('./packets', { recursive: true });
   fs.mkdirSync('./output', { recursive: true });
   for (const filename of fs.readdirSync('./p-docx')) {
     try {
