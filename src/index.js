@@ -37,6 +37,7 @@ export default class Parser {
     this.classifyUnknown = classifyUnknown;
     this.modaq = modaq;
     this.spacePowermarks = spacePowermarks;
+    this.verbose = verbose;
 
     this.warnings = [];
 
