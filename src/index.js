@@ -501,6 +501,7 @@ export default class Parser {
   parsePacket (text, name = '') {
     this.tossupIndex = 1;
     this.bonusIndex = 1;
+    this.warnings = [];
 
     if (this.modaq) {
       text = text.replace(/"/g, '\u0022');
