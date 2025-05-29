@@ -1,6 +1,7 @@
 import { classifyText, classifyQuestion } from './classifier/index.js';
+import parseCategoryTag from './parse-category-tag.js';
 import Regex from './regex.js';
-import { escapeRegex, formatText, getAlternateSubcategory, getSubcategory, preprocessPacket, removeFormatting } from './utils.js';
+import { escapeRegex, formatText, preprocessPacket, removeFormatting } from './utils.js';
 
 import { ALTERNATE_SUBCATEGORIES, SUBSUBCATEGORIES } from './constants/categories.js';
 import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
@@ -373,7 +374,7 @@ export default class Parser {
 
     const index = type === 'tossup' ? this.tossupIndex : this.bonusIndex;
 
-    const categoryTag = this.parseCategoryTag(text);
+    const categoryTag = parseCategoryTag(text);
 
     if (categoryTag) {
       [category, subcategory, alternateSubcategory, metadata] = categoryTag;
@@ -429,32 +430,6 @@ export default class Parser {
     if (!metadata && !alternateSubcategory) {
       metadata = `${category} - ${subcategory}`;
     }
-
-    return [category, subcategory, alternateSubcategory, metadata];
-  }
-
-  /**
-   * Parses the category tag from the given text and extracts category, subcategory,
-   * alternate subcategory, and metadata.
-   *
-   * @param {string} text - The input text to parse.
-   * @returns {[string, string, string, string] | null} A tuple containing category, subcategory,
-   * alternate subcategory, and metadata, or null if no category tag is found.
-   */
-  parseCategoryTag (text) {
-    // Remove formatting and search for the category tag using the regex
-    let categoryTag = removeFormatting(text).match(this.regex.CATEGORY_TAG);
-
-    if (!categoryTag) {
-      return null;
-    }
-
-    categoryTag = categoryTag[0].trim().replace(/\n/g, ' ');
-    const metadata = categoryTag.slice(1, -1); // Remove the first and last characters
-
-    const subcategory = getSubcategory(categoryTag);
-    const alternateSubcategory = getAlternateSubcategory(categoryTag);
-    const category = subcategory ? SUBCAT_TO_CAT[subcategory] : '';
 
     return [category, subcategory, alternateSubcategory, metadata];
   }

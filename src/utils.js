@@ -1,6 +1,4 @@
 import ANSWER_TYPOS from './constants/answer-typos.js';
-import STANDARDIZE_ALTERNATE_SUBCATS from './constants/standardize-alternate-subcats.js';
-import STANDARDIZE_SUBCATS from './constants/standardize-subcats.js';
 
 /**
  * Source: https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
@@ -26,76 +24,6 @@ export function formatText (text, modaq = false) {
     .replace(/{i}/g, modaq ? '<em>' : '<i>')
     .replace(/{\/i}/g, modaq ? '</em>' : '</i>')
     .trim();
-}
-
-/**
- *
- * @param {string} text
- * @returns
- */
-export function getAlternateSubcategory (text) {
-  if (text[0] === '<' && text[text.length - 1] === '>') {
-    text = text.slice(1, -1);
-  }
-  text = text.toLowerCase();
-  // handle dashes
-  text = text.replace(/[\u2010-\u2015]/g, ' ');
-  text = text.replace(/\u002d/g, ' ');
-
-  const textSplit = text.split(/[/,; ]/);
-
-  for (const subcat in STANDARDIZE_ALTERNATE_SUBCATS) {
-    let works = true;
-    const words = subcat.toLowerCase().split(' ');
-
-    for (const word of words) {
-      if (!textSplit.includes(word)) {
-        works = false;
-        break;
-      }
-    }
-
-    if (works) {
-      return STANDARDIZE_ALTERNATE_SUBCATS[subcat];
-    }
-  }
-
-  return '';
-}
-
-/**
- *
- * @param {string} text
- * @returns
- */
-export function getSubcategory (text) {
-  if (text[0] === '<' && text[text.length - 1] === '>') {
-    text = text.slice(1, -1);
-  }
-  text = text.toLowerCase();
-  // handle dashes
-  text = text.replace(/[\u2010-\u2015]/g, ' ');
-  text = text.replace(/\u002d/g, ' ');
-
-  const textSplit = text.split(/[/,;:. ]/);
-
-  for (const subcat in STANDARDIZE_SUBCATS) {
-    let works = true;
-    const words = subcat.toLowerCase().split(' ');
-
-    for (const word of words) {
-      if (!textSplit.includes(word)) {
-        works = false;
-        break;
-      }
-    }
-
-    if (works) {
-      return STANDARDIZE_SUBCATS[subcat];
-    }
-  }
-
-  return '';
 }
 
 /**
