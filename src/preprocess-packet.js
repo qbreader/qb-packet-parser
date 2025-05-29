@@ -1,0 +1,95 @@
+import ANSWER_TYPOS from './constants/answer-typos.js';
+
+/**
+ * Preprocesses the packet text by performing various replacements and cleaning operations.
+ *
+ * @param {string} text - The packet text to preprocess.
+ * @returns {string} The preprocessed packet text.
+ */
+export function preprocessPacket (text) {
+  // Remove spaces before the first non-space character
+  text = text.replace(/^ +/g, '');
+
+  text = text + '\n0.';
+  // Remove zero-width characters
+  text = text.replace(/\f/g, '').replace(/\u200b/g, '');
+  // Change soft hyphens to regular hyphens
+  text = text.replace(/\xad/g, '-');
+  // Change Greek question mark to semicolon
+  text = text.replace(/\u037e/g, ';');
+
+  text = text
+    .replace(/\u00a0/g, ' ')
+    .replace(/ {\/bu}/g, '{/bu} ')
+    .replace(/ {\/u}/g, '{/u} ')
+    .replace(/ {\/i}/g, '{/i} ')
+    .replace(/{i}\n{\/i}/g, '\n')
+    .replace(/{i} {\/i}/g, ' ')
+    .replace(/\n10\]/g, '[10]')
+    .replace(/\[5,5\]/g, '[10]')
+    .replace(/\[5\/5\]/g, '[10]')
+    .replace(/\[5, 5\]/g, '[10]')
+    .replace(/\[5,5,5,5\]/g, '[20]')
+    .replace(/\[5\/5\/5\/5\]/g, '[20]')
+    .replace(/\[10\/10\]/g, '[20]')
+    .replace(/\[2x10\]/g, '[20]')
+    .replace(/\[2x5\]/g, '[10]')
+    .replace(/\[10 /g, '[10] ')
+    .replace(/AUDIO RELATED BONUS: /g, '\n')
+    .replace(/HANDOUT RELATED BONUS: /g, '\n')
+    .replace(/RELATED BONUS: /g, '\n')
+    .replace(/RELATED BONUS\. /g, '\n')
+    .replace(/RELATED BONUS\n/g, '\n\n')
+    .replace(/HANDOUT BONUS: /g, '\n')
+    .replace(/BONUS: /g, '\n')
+    .replace(/Bonus: /g, '\n')
+    .replace(/BONUS\. /g, '\n')
+    .replace(/TOSSUP\. /g, '');
+
+  for (const typo of ANSWER_TYPOS) {
+    text = text.replace(new RegExp(typo, 'g'), 'ANSWER:');
+    text = text.replace(new RegExp(typo[0] + typo.slice(1).toLowerCase(), 'g'), 'ANSWER:');
+  }
+
+  // Replace tabs and redundant spaces
+  text = text.replace(/\t/g, ' ');
+  text = text.replace(/ {2,}/g, ' ');
+
+  // Remove redundant tags
+  text = text.replace(/\{(\w+)\}\{\/\1\}/g, '');
+  text = text.replace(/\{\/(\w+)\}\{\1\}/g, '');
+
+  // Handle HTML formatting at the start of the string
+  text = text.replace(/^\{(\w+)\}(\d{1,2}|TB|X)\./gim, '1. {$1}');
+  text = text.replace(/^\{(\w+)\}ANSWER(:?)/gim, 'ANSWER$2{$1}');
+
+  // Handle nonstandard question numbering
+  text = text.replace(/^\(?(\d{1,2}|TB)\)/g, '1. ');
+  text = text.replace(/^(TB|X|Tiebreaker|Extra)[.:]?/g, '21.');
+  text = text.replace(/^(T|S|TU)\d{1,2}[.:]?/g, '21.');
+
+  // Handle nonstandard bonus part numbering
+  text = text.replace(/^[ABC][.:] */g, '[10] ');
+  text = text.replace(/^BS\d{1,2}[.:]?/g, '21.');
+
+  // Handle question number on a new line from the question text
+  text = text.replace(/(\d{1,2}\.) *\n/g, '$1');
+
+  // Clear lines that are all spaces
+  text = text.replace(/^\s*$/g, '');
+
+  // Ensure ANSWER starts on a new line
+  text = text.replace(/(?<=.)(?=ANSWER:)/g, '\n');
+
+  // Remove duplicate lines
+  const count = (text.match(/(.+)\n\1/g) || []).length;
+  text = text.replace(/([^\n]+)\n\1\n/g, '$1\n');
+  if (count > 0) {
+    console.warn(`Removed ${count} duplicate lines`);
+  }
+
+  // Remove "Page X" lines
+  text = text.replace(/Page \d+( of \d+)?/g, '');
+
+  return text;
+}

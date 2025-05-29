@@ -1,7 +1,8 @@
 import { classifyText, classifyQuestion } from './classifier/index.js';
 import parseCategoryTag from './parse-category-tag.js';
+import { preprocessPacket } from './preprocess-packet.js';
 import Regex from './regex.js';
-import { escapeRegex, formatText, preprocessPacket, removeFormatting } from './utils.js';
+import { escapeRegex, formatText, removeFormatting } from './utils.js';
 
 import { ALTERNATE_SUBCATEGORIES, SUBSUBCATEGORIES } from './constants/categories.js';
 import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
