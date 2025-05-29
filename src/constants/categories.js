@@ -24,7 +24,12 @@ export const SUBCATEGORY_TO_CATEGORY = {
   'Current Events': 'Current Events',
   Geography: 'Geography',
   'Other Academic': 'Other Academic',
-  Trash: 'Trash'
+  Movies: 'Pop Culture',
+  Music: 'Pop Culture',
+  Sports: 'Pop Culture',
+  Television: 'Pop Culture',
+  'Video Games': 'Pop Culture',
+  'Other Pop Culture': 'Pop Culture'
 };
 export const SUBCATEGORIES = Object.keys(SUBCATEGORY_TO_CATEGORY);
 

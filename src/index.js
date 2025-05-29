@@ -20,6 +20,7 @@ export default class Parser {
     autoInsertPowermarks = false,
     bonusLength = 3,
     buzzpoints = false,
+    constantCategory = '',
     constantSubcategory = '',
     constantAlternateSubcategory = '',
     classifyUnknown = true,
@@ -50,8 +51,12 @@ export default class Parser {
      */
     this.bonusIndex = 0;
 
+    if (constantCategory && constantSubcategory) {
+      throw new Error('Cannot use both a constant category and a constant subcategory.');
+    }
+
     this.constantSubcategory = constantSubcategory;
-    this.constantCategory = constantSubcategory ? SUBCAT_TO_CAT[constantSubcategory] : '';
+    this.constantCategory = constantSubcategory ? SUBCAT_TO_CAT[constantSubcategory] : constantCategory;
     this.constantAlternateSubcategory = constantAlternateSubcategory;
 
     if (!this.hasCategoryTags && this.constantSubcategory !== '') {
@@ -390,7 +395,7 @@ export default class Parser {
     }
 
     if (!subcategory || (!this.hasCategoryTags && this.alwaysClassify)) {
-      const [tempCategory, tempSubcategory, tempAlternateSubcategory] = classifyQuestion(text);
+      const [tempCategory, tempSubcategory, tempAlternateSubcategory] = classifyQuestion(text, this.constantCategory);
 
       category = tempCategory;
       subcategory = tempSubcategory;

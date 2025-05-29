@@ -8,10 +8,11 @@ import STOP_WORDS from './stop-words.js';
  * Classifies the given text into a category, subcategory, and alternate subcategory.
  *
  * @param {string} text - The text to classify.
+ * @param {string} [fixedCategory=''] - An optional fixed category to use instead of classifying the category.
  * @returns {[string, string, string]} A tuple containing the category, subcategory, and alternate subcategory.
  */
-export function classifyQuestion (text) {
-  const subcategory = classifyText(text, { mode: 'subcategory' });
+export function classifyQuestion (text, fixedCategory = undefined) {
+  const subcategory = classifyText(text, { mode: 'subcategory', category: fixedCategory });
   const category = SUBCATEGORY_TO_CATEGORY[subcategory];
   let alternateSubcategory = '';
 
@@ -40,15 +41,26 @@ export function classifyQuestion (text) {
 export function classifyText (text, { mode = 'subcategory', category = '', subcategory = '' } = {}) {
   switch (mode) {
     case 'subcategory': {
+      const validIndices = [];
+      if (category) {
+        for (const i in SUBCATEGORIES) {
+          const subcategory = SUBCATEGORIES[i];
+          if (SUBCATEGORY_TO_CATEGORY[subcategory] === category) { validIndices.push(parseInt(i)); }
+        }
+      }
       const index = naiveBayesClassify(
         text,
         CLASSIFIER_SUBCATEGORY.word_to_subcategory,
-        CLASSIFIER_SUBCATEGORY.subcategory_frequencies
+        CLASSIFIER_SUBCATEGORY.subcategory_frequencies,
+        validIndices
       );
       return SUBCATEGORIES[index];
     }
 
     case 'alternate-subcategory': {
+      if (!category || !(category in ALTERNATE_SUBCATEGORIES)) {
+        throw new Error(`Category ${category} does not have alternate subcategories.`);
+      }
       const index = naiveBayesClassify(
         text,
         CLASSIFIER_ALTERNATE_SUBCATEGORY.word_to_alternate_subcategory[category],
@@ -58,6 +70,9 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
     }
 
     case 'subsubcategory': {
+      if (!subcategory || !(subcategory in SUBSUBCATEGORIES)) {
+        throw new Error(`Subcategory ${subcategory} does not have subsubcategories.`);
+      }
       const index = naiveBayesClassify(
         text,
         CLASSIFIER_SUBSUBCATEGORY.word_to_subsubcategory[subcategory],
@@ -74,10 +89,11 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
  * @param {string} text - The text to classify.
  * @param {Object} wordToFrequency - A dictionary mapping words to their frequency distributions across classes.
  * @param {number[]} classFrequencies - The frequencies of each class.
+ * @param {number[]} [validIndices] - An optional array of valid class indices to consider for classification.
  * @param {number} [epsilon=0.01] - A smoothing factor to avoid zero probabilities.
  * @returns {number} The index of the predicted class.
  */
-function naiveBayesClassify (text, wordToFrequency, classFrequencies, epsilon = 0.01) {
+function naiveBayesClassify (text, wordToFrequency, classFrequencies, validIndices, epsilon = 0.01) {
   // Calculate log-likelihoods for each class
   const likelihoods = classFrequencies.map(x => Math.log(x));
   const smoothedClassFrequencies = classFrequencies.map(x => Math.log(x + epsilon * classFrequencies.length));
@@ -100,14 +116,21 @@ function naiveBayesClassify (text, wordToFrequency, classFrequencies, epsilon = 
     }
   }
 
-  // Find the maximum likelihood
+  if (Array.isArray(validIndices) && validIndices.length > 0) {
+    for (let i = 0; i < likelihoods.length; i++) {
+      if (!validIndices.includes(i)) {
+        likelihoods[i] = -Infinity; // Ignore invalid indices
+      }
+    }
+  }
+
   const maxLikelihood = Math.max(...likelihoods);
-  const validIndices = likelihoods
+  const candidateIndices = likelihoods
     .map((likelihood, index) => likelihood === maxLikelihood ? index : null)
     .filter(index => index !== null);
 
   // Randomly choose one of the valid indices (if there are multiple)
-  return validIndices[Math.floor(Math.random() * validIndices.length)];
+  return candidateIndices[Math.floor(Math.random() * candidateIndices.length)];
 }
 
 function removePunctuation (s, punctuation = '.,!-;:\'"\\/?@#$%^&*_~()[]{}“”‘’') {
