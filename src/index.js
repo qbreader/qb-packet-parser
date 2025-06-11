@@ -206,6 +206,18 @@ export default class Parser {
 
     const [difficultyModifiers, values] = parseBonusTags(text, this.modaq || this.buzzpoints);
 
+    if (difficultyModifiers.length > 0 && values.length !== difficultyModifiers.length) {
+      this.warn(`Bonus ${this.bonusIndex} has ${difficultyModifiers.length} difficulty modifiers but ${values.length} values`);
+    }
+
+    // check if 'e', 'm', 'h' are all present in difficultyModifiers
+    if (
+      difficultyModifiers.length === 3 &&
+      (!difficultyModifiers.includes('e') || !difficultyModifiers.includes('m') || !difficultyModifiers.includes('h'))
+    ) {
+      this.warn(`Bonus ${this.bonusIndex} has difficulty modifiers ${difficultyModifiers.join(', ')} but should be 'e', 'm', 'h'`);
+    }
+
     for (const typo of TEN_TYPOS) {
       text = text.replace(new RegExp(escapeRegex(typo), 'gi'), '[10]');
     }
