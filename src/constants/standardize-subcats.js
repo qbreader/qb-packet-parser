@@ -111,6 +111,7 @@ const STANDARDIZE_SUBCATS = {
   'Auditory Arts': 'Auditory Fine Arts',
   'Auditory Art': 'Auditory Fine Arts',
   'Classical Music': 'Auditory Fine Arts',
+  'Fine Arts Music': 'Auditory Fine Arts',
   'Misc. FA': 'Other Fine Arts',
   'Other Arts': 'Other Fine Arts',
   'Other Fine Art': 'Other Fine Arts',
