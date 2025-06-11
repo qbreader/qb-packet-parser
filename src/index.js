@@ -1,4 +1,5 @@
 import { classifyText, classifyQuestion } from './classifier/index.js';
+import parseBonusTags from './parse-bonus-tags.js';
 import parseCategoryTag from './parse-category-tag.js';
 import { preprocessPacket } from './preprocess-packet.js';
 import Regex from './regex.js';
@@ -203,7 +204,7 @@ export default class Parser {
       text = text.replace(this.regex.CATEGORY_TAG, '');
     }
 
-    const [difficultyModifiers, values] = this.parseBonusTags(text);
+    const [difficultyModifiers, values] = parseBonusTags(text, this.modaq || this.buzzpoints);
 
     for (const typo of TEN_TYPOS) {
       text = text.replace(new RegExp(escapeRegex(typo), 'gi'), '[10]');
@@ -433,41 +434,6 @@ export default class Parser {
     }
 
     return [category, subcategory, alternateSubcategory, metadata];
-  }
-
-  /**
-   * Parses the bonus tags from the given text and extracts the difficulties and values.
-   * If `this.modaq` or `this.buzzpoints` is true, the values will be set to 10 if no value is found.
-   *
-   * @param {string} text - The text to parse the bonus tags from.
-   * @returns {[Array<"e" | "m" | "h">, number[]]} A tuple containing the difficulties and values.
-   */
-  parseBonusTags (text) {
-    const tags = text.match(this.regex.BONUS_TAGS) || [];
-    const difficultyModifiers = [];
-    let values = [];
-
-    for (const tag of tags) {
-      for (const difficultyModifier of ['e', 'm', 'h']) {
-        if (tag.toLowerCase().includes(difficultyModifier)) {
-          difficultyModifiers.push(difficultyModifier);
-          break;
-        }
-      }
-
-      for (const value of ['10', '15', '20', '5']) {
-        if (tag.includes(value)) {
-          values.push(parseInt(value));
-          break;
-        }
-      }
-    }
-
-    if (values.length === 0 && (this.modaq || this.buzzpoints)) {
-      values = Array(tags.length).fill(10);
-    }
-
-    return [difficultyModifiers, values];
   }
 
   /**
