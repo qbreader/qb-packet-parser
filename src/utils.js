@@ -28,9 +28,10 @@ export function formatText (text, modaq = false) {
  *
  * @param {string} text
  * @param {boolean} [includeItalics]
+ * @param {boolean} [sanitizeString]
  * @returns {string}
  */
-export function removeFormatting (text, includeItalics = false) {
+export function removeFormatting (text, includeItalics = false, sanitizeString = true) {
   text = text
     .replace(/{b}/g, '')
     .replace(/{\/b}/g, '')
@@ -43,5 +44,20 @@ export function removeFormatting (text, includeItalics = false) {
       .replace(/{\/i}/g, '');
   }
 
-  return text.trim();
+  text = text.trim();
+
+  if (!sanitizeString) {
+    return text;
+  }
+
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u2010-\u2015]/g, '-')
+    .replace(/[\u2018-\u201B]/g, '\'')
+    .replace(/[\u201C-\u201F]/g, '"')
+    .replace(/[\u2026]/g, '...')
+    .replace(/[\u2032-\u2037]/g, '\'')
+    .replace(/[\u00B7\u22C5\u2027]/g, '') // interpuncts
+    .replace(/\u0142/g, 'l'); // ł -> l
 }
