@@ -28,6 +28,7 @@ export default class Parser {
     constantAlternateSubcategory = '',
     classifyUnknown = true,
     modaq = false,
+    noQuestionUnderlining = false,
     spacePowermarks = false,
     verbose = false
   }) {
@@ -40,6 +41,7 @@ export default class Parser {
     this.buzzpoints = buzzpoints;
     this.classifyUnknown = classifyUnknown;
     this.modaq = modaq;
+    this.noQuestionUnderlining = noQuestionUnderlining;
     this.spacePowermarks = spacePowermarks;
     this.verbose = verbose;
 
@@ -118,6 +120,13 @@ export default class Parser {
       questionRaw = '{b}' + questionRaw.slice(4);
     } else if (questionRaw.startsWith('{i} ')) {
       questionRaw = '{i}' + questionRaw.slice(4);
+    }
+
+    if (this.noQuestionUnderlining) {
+      if (questionRaw.includes('{u}')) {
+        questionRaw = questionRaw.replace(/\{u\}/g, '').replace(/\{\/u\}/g, '');
+        this.warn(`Tossup ${this.tossupIndex} question text had underlining removed`);
+      }
     }
 
     let question = formatText(questionRaw, this.modaq);
@@ -241,6 +250,13 @@ export default class Parser {
       leadinRaw = '{i}' + leadinRaw.slice(4);
     }
 
+    if (this.noQuestionUnderlining) {
+      if (leadinRaw.includes('{u}')) {
+        leadinRaw = leadinRaw.replace(/\{u\}/g, '').replace(/\{\/u\}/g, '');
+        this.warn(`Bonus ${this.bonusIndex} leadin text had underlining removed`);
+      }
+    }
+
     const leadin = formatText(leadinRaw, this.modaq);
     const leadinSanitized = removeFormatting(leadinRaw);
 
@@ -259,6 +275,16 @@ export default class Parser {
     }
 
     const partsRaw = partsRawMatches.map(part => part.replace(/\n/g, ' ').trim());
+
+    if (this.noQuestionUnderlining) {
+      for (let i = 0; i < partsRaw.length; i++) {
+        if (partsRaw[i].includes('{u}')) {
+          partsRaw[i] = partsRaw[i].replace(/\{u\}/g, '').replace(/\{\/u\}/g, '');
+          this.warn(`Bonus ${this.bonusIndex} part ${i + 1} had underlining removed`);
+        }
+      }
+    }
+
     const parts = partsRaw.map(part => formatText(part, this.modaq));
     const partsSanitized = partsRaw.map(part => removeFormatting(part));
 
