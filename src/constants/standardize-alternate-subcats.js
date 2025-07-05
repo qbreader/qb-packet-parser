@@ -26,8 +26,6 @@ const STANDARDIZE_ALTERNATE_SUBCATS = {
   Opera: 'Opera',
   Photography: 'Photography',
   'Misc Arts': 'Misc Arts',
-  Beliefs: 'Beliefs',
-  Practices: 'Practices',
   Anthropology: 'Anthropology',
   Economics: 'Economics',
   Linguistics: 'Linguistics',
