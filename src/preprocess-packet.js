@@ -51,8 +51,8 @@ export function preprocessPacket (text) {
     text = text.replace(new RegExp(typo[0] + typo.slice(1).toLowerCase(), 'g'), 'ANSWER:');
   }
 
-  // Replace tabs and redundant spaces
-  text = text.replace(/\t/g, ' ');
+  // Replace tabs, non-breaking spaces (nbsp), and redundant spaces
+  text = text.replace(/\t/g, ' ').replace(/\xa0/g, ' ');
   text = text.replace(/ {2,}/g, ' ');
 
   // Remove redundant tags
