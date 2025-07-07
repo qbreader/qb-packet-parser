@@ -1,8 +1,9 @@
-import { ALTERNATE_SUBCATEGORIES, SUBCATEGORIES, SUBCATEGORY_TO_CATEGORY, SUBSUBCATEGORIES } from '../constants/categories.js';
+import { ALTERNATE_SUBCATEGORIES, SUBCATEGORY_TO_CATEGORY, SUBSUBCATEGORIES } from '../constants/categories.js';
 import CLASSIFIER_ALTERNATE_SUBCATEGORY from './classifier-alternate-subcategory.js';
 import CLASSIFIER_SUBCATEGORY from './classifier-subcategory.js';
 import CLASSIFIER_SUBSUBCATEGORY from './classifier-subsubcategory.js';
 import STOP_WORDS from './stop-words.js';
+import SUBCATEGORIES from './subcategories.js';
 
 /**
  * Classifies the given text into a category, subcategory, and alternate subcategory.
