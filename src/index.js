@@ -445,9 +445,7 @@ export default class Parser {
         this.warn(`${type} ${index} classified as ${category} - ${subcategory}`);
       }
 
-      if (!alternateSubcategory) {
-        alternateSubcategory = tempAlternateSubcategory;
-      }
+      alternateSubcategory = tempAlternateSubcategory;
     }
 
     if (!alternateSubcategory && !this.modaq) {
