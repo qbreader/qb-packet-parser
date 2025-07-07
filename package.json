@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "webpack",
+    "publish": "npm publish --access public",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
