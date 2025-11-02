@@ -437,7 +437,7 @@ export default class Parser {
     }
 
     if (!subcategory || (!this.hasCategoryTags && this.alwaysClassify)) {
-      const [tempCategory, tempSubcategory, tempAlternateSubcategory] = classifyQuestion(text, this.constantCategory);
+      const [tempCategory, tempSubcategory, tempAlternateSubcategory] = classifyQuestion(text, this.constantCategory || category);
 
       category = tempCategory;
       subcategory = tempSubcategory;
