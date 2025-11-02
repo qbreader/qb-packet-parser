@@ -1,0 +1,36 @@
+import invertMapping from './invert-mapping.js';
+
+const NORM_SUBCATEGORY = {
+  'American Literature': ['American Lit', 'US Literature', 'U.S. Literature', 'Miscellaneous American'],
+  'British Literature': ['British Lit', 'Brit Lit', 'British Miscellaneous', 'Anglo Lit'],
+  'Classical Literature': ['Ancient Literature'],
+  'European Literature': ['European/World Lit', 'European Lit', 'EuroLit', 'Euro Lit', 'Literature Shakespeare'],
+  'World Literature': ['World Lit'],
+  'Other Literature': ['Mixed Lit', 'Other Lit', 'Literary Criticism', 'Nonfiction', 'Essay', 'Any Lit', 'Misc Literature', 'Miscellaneous Literature', 'Misc Lit'],
+  'American History': ['American Hist', 'AmHist', 'US Hist', 'US History', 'U.S. History'],
+  'Ancient History': ['Classical History'],
+  'European History': ['British History', 'BritHist', 'European Hist', 'Euro History', 'Europe History', 'Other Western History', 'Mediterranean History', 'ContHist', 'Continental History'],
+  'World History': ['International Hist', 'World Hist', 'Commonwealth History', 'Commonwealth/Misc', 'African History', 'Asian History'],
+  'Other History': ['Misc. History', 'Misc History', 'Zeitgeist', 'Mixed History', 'Historiography', 'Historio/Archaeo', 'Archaeology', 'Any History'],
+  Biology: ['Bio', 'Botany'],
+  Chemistry: ['Chem'],
+  Physics: ['Phys'],
+  'Other Science': ['Math', 'Mathematics', 'Statistics', 'Astronomy', 'Astro', 'Computer Science', 'CompSci', 'Earth Science', 'Earth Sci', 'Earth', 'Atmospheric Science', 'Environmental Science', 'Ocean Science', 'Engineering', 'Other Sci', 'OSci', 'Misc. Science', 'Science Culture', 'Science African', 'Science Tech', 'Science Academic', 'Science History', 'Science Applied/Eng'],
+  'Visual Fine Arts': ['Painting', 'Sculpture', 'Visual FA', 'Visual Fine Art', 'Visual Arts', 'Visual Art', 'European Art', 'World Art'],
+  'Auditory Fine Arts': ['Auditory FA', 'Auditory Fine Art', 'Audial Fine Arts', 'Auditory Arts', 'Auditory Art', 'Classical Music', 'Fine Arts Music'],
+  'Other Fine Arts': ['Misc. FA', 'Other Arts', 'Other Fine Art', 'Architecture', 'Ballet', 'Theatre', 'Theater', 'Fashion', 'Performance', 'Fine Arts - World Art', 'Photography', 'Film', 'Jazz', 'Opera', 'Dance', 'Misc. Art', 'Misc Art', 'Any Art', 'OVisArt', 'OAudArt', 'OtherArt', 'OArts', 'OArt', 'Performing Arts'],
+  Religion: ['Rel', 'Theology', 'Buddhism', 'Christian Practice', 'Hebrew Bible', 'Hinduism', 'Islam', 'Jewish Practice', 'New Testament', 'Practices', 'Bible/Christianity', 'Bible'],
+  Mythology: ['Misc Belief', 'Myth', 'Legends', 'Stories'],
+  Philosophy: ['Phil/Thought', 'Thought', 'PhilO'],
+  'Social Science': ['Econ', 'Economy', 'Economic', 'Economics', 'Psychology', 'Linguistics', 'Sociology', 'Anthro', 'Anthropology', 'Political Science', 'Law', 'Cultural Criticism', 'Other Social Science'],
+  'Current Events': ['Modern World', 'CE'],
+  Geography: ['Geo'],
+  'Other Academic': ['Misc. Academic', 'Mixed Academic', 'Miscellaneous', 'General Knowledge', "Writer's Choice", 'Writer’s Choice', 'My Choice', 'OA'],
+  Movies: [],
+  Music: ['Pop Music', 'Rock', 'R&B', 'Soul'],
+  Sports: [],
+  Television: ['TV', 'Small Screen'],
+  'Video Games': [],
+  'Other Pop Culture': ['Trash', 'Pop Culture', 'Popular Culture', 'Comic', 'Comics', 'Manga']
+};
+export default invertMapping(NORM_SUBCATEGORY, true);

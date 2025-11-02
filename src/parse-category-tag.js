@@ -1,6 +1,6 @@
-import STANDARDIZE_ALTERNATE_SUBCATS from './constants/standardize-alternate-subcats.js';
-import STANDARDIZE_SUBCATS from './constants/standardize-subcats.js';
-import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
+import NORM_ALTERNATE_SUBCATEGORY from './constants/norm-alternate-subcategory.js';
+import NORM_SUBCATEGORY from './constants/norm-subcategory.js';
+import { SUBCATEGORY_TO_CATEGORY } from './constants/category-subcategory.js';
 import { removeFormatting } from './utils.js';
 
 /**
@@ -25,7 +25,7 @@ export default function parseCategoryTag (text) {
 
   const subcategory = getSubcategory(categoryTag);
   const alternateSubcategory = getAlternateSubcategory(categoryTag);
-  const category = subcategory ? SUBCAT_TO_CAT[subcategory] : '';
+  const category = subcategory ? SUBCATEGORY_TO_CATEGORY[subcategory] : '';
 
   return [category, subcategory, alternateSubcategory, metadata];
 }
@@ -46,9 +46,9 @@ function getAlternateSubcategory (text) {
 
   const textSplit = text.split(/[/,; ]/);
 
-  for (const subcat in STANDARDIZE_ALTERNATE_SUBCATS) {
+  for (const candidate in NORM_ALTERNATE_SUBCATEGORY) {
     let works = true;
-    const words = subcat.toLowerCase().split(' ');
+    const words = candidate.toLowerCase().split(' ');
 
     for (const word of words) {
       if (!textSplit.includes(word)) {
@@ -58,7 +58,7 @@ function getAlternateSubcategory (text) {
     }
 
     if (works) {
-      return STANDARDIZE_ALTERNATE_SUBCATS[subcat];
+      return NORM_ALTERNATE_SUBCATEGORY[candidate];
     }
   }
 
@@ -81,9 +81,9 @@ function getSubcategory (text) {
 
   const textSplit = text.split(/[/,;:. ]/);
 
-  for (const subcat in STANDARDIZE_SUBCATS) {
+  for (const candidate in NORM_SUBCATEGORY) {
     let works = true;
-    const words = subcat.toLowerCase().split(' ');
+    const words = candidate.toLowerCase().split(' ');
 
     for (const word of words) {
       if (!textSplit.includes(word)) {
@@ -93,7 +93,7 @@ function getSubcategory (text) {
     }
 
     if (works) {
-      return STANDARDIZE_SUBCATS[subcat];
+      return NORM_SUBCATEGORY[candidate];
     }
   }
 

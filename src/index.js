@@ -5,8 +5,9 @@ import { preprocessPacket } from './preprocess-packet.js';
 import Regex from './regex.js';
 import { escapeRegex, formatText, removeFormatting } from './utils.js';
 
-import { ALTERNATE_SUBCATEGORIES, SUBSUBCATEGORIES } from './constants/categories.js';
-import SUBCAT_TO_CAT from './constants/subcat-to-cat.js';
+import { CATEGORY_TO_ALTERNATE_SUBCATEGORY } from './constants/category-alternate-subcategory.js';
+import { SUBCATEGORY_TO_SUBSUBCATEGORY } from './constants/subcategory-subsubcategory.js';
+import { SUBCATEGORY_TO_CATEGORY } from './constants/category-subcategory.js';
 import TEN_TYPOS from './constants/ten-typos.js';
 import convertDocx from './converters/docx.js';
 
@@ -61,7 +62,7 @@ export default class Parser {
     }
 
     this.constantSubcategory = constantSubcategory;
-    this.constantCategory = constantSubcategory ? SUBCAT_TO_CAT[constantSubcategory] : constantCategory;
+    this.constantCategory = constantSubcategory ? SUBCATEGORY_TO_CATEGORY[constantSubcategory] : constantCategory;
     this.constantAlternateSubcategory = constantAlternateSubcategory;
 
     if (!this.hasCategoryTags && this.constantSubcategory !== '') {
@@ -449,9 +450,9 @@ export default class Parser {
     }
 
     if (!alternateSubcategory && !this.modaq) {
-      if (Object.prototype.hasOwnProperty.call(ALTERNATE_SUBCATEGORIES, category)) {
+      if (category in CATEGORY_TO_ALTERNATE_SUBCATEGORY) {
         alternateSubcategory = classifyText(text, { mode: 'alternate-subcategory', category });
-      } else if (Object.prototype.hasOwnProperty.call(SUBSUBCATEGORIES, subcategory)) {
+      } else if (subcategory in SUBCATEGORY_TO_SUBSUBCATEGORY) {
         alternateSubcategory = classifyText(text, { mode: 'subsubcategory', subcategory });
       }
     }

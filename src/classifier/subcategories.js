@@ -1,11 +1,11 @@
 /**
- * This constant contains the subcategories used in the classifier: In classifier-subcategory.js,
- * word_to_subcategory[token][index] corresponds to CLASSIFIER_SUBCATEGORIES[index], and
- * word_to_subcategory[token].length === CLASSIFIER_SUBCATEGORIES.length === 27. This differs
- * from SUBCATEGORIES in the constants/categories.js file in that it is missing the subcategories
+ * This constant contains the subcategories used in the classifier:
+ * - In classifier-subcategory.js, `word_to_subcategory[token][index]` corresponds to `CLASSIFIER_SUBCATEGORY_LIST[index]`,
+ * and `word_to_subcategory[token].length === CLASSIFIER_SUBCATEGORY_LIST.length === 27`.
+ * - This differs from `SUBCATEGORY_LIST` in the `constants/category-subcategory.js` file in that it is missing the subcategories
  * "Classical Literature", "Other Literature", "Other History", and "Other Academic".
  */
-const CLASSIFIER_SUBCATEGORIES = [
+const CLASSIFIER_SUBCATEGORY_LIST = [
   'American Literature',
   'British Literature',
   'European Literature',
@@ -34,4 +34,4 @@ const CLASSIFIER_SUBCATEGORIES = [
   'Video Games',
   'Other Pop Culture'
 ];
-export default CLASSIFIER_SUBCATEGORIES;
+export default CLASSIFIER_SUBCATEGORY_LIST;

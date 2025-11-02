@@ -1,9 +1,11 @@
-import { ALTERNATE_SUBCATEGORIES, SUBCATEGORY_TO_CATEGORY, SUBSUBCATEGORIES } from '../constants/categories.js';
+import { SUBCATEGORY_TO_CATEGORY } from '../constants/category-subcategory.js';
+import { CATEGORY_TO_ALTERNATE_SUBCATEGORY } from '../constants/category-alternate-subcategory.js';
+import { SUBCATEGORY_TO_SUBSUBCATEGORY } from '../constants/subcategory-subsubcategory.js';
 import CLASSIFIER_ALTERNATE_SUBCATEGORY from './classifier-alternate-subcategory.js';
 import CLASSIFIER_SUBCATEGORY from './classifier-subcategory.js';
 import CLASSIFIER_SUBSUBCATEGORY from './classifier-subsubcategory.js';
 import STOP_WORDS from './stop-words.js';
-import SUBCATEGORIES from './subcategories.js';
+import CLASSIFIER_SUBCATEGORY_LIST from './subcategories.js';
 
 /**
  * Classifies the given text into a category, subcategory, and alternate subcategory.
@@ -17,11 +19,11 @@ export function classifyQuestion (text, fixedCategory = undefined) {
   const category = SUBCATEGORY_TO_CATEGORY[subcategory];
   let alternateSubcategory = '';
 
-  if (category in ALTERNATE_SUBCATEGORIES) {
+  if (category in CATEGORY_TO_ALTERNATE_SUBCATEGORY) {
     alternateSubcategory = classifyText(text, { mode: 'alternate-subcategory', category });
   }
 
-  if (subcategory in SUBSUBCATEGORIES) {
+  if (subcategory in SUBCATEGORY_TO_SUBSUBCATEGORY) {
     // TODO: change left-hand variable to subsubcategory
     alternateSubcategory = classifyText(text, { mode: 'subsubcategory', subcategory });
   }
@@ -44,8 +46,8 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
     case 'subcategory': {
       const validIndices = [];
       if (category) {
-        for (const i in SUBCATEGORIES) {
-          const subcategory = SUBCATEGORIES[i];
+        for (const i in CLASSIFIER_SUBCATEGORY_LIST) {
+          const subcategory = CLASSIFIER_SUBCATEGORY_LIST[i];
           if (SUBCATEGORY_TO_CATEGORY[subcategory] === category) { validIndices.push(parseInt(i)); }
         }
       }
@@ -55,11 +57,11 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
         CLASSIFIER_SUBCATEGORY.subcategory_frequencies,
         validIndices
       );
-      return SUBCATEGORIES[index];
+      return CLASSIFIER_SUBCATEGORY_LIST[index];
     }
 
     case 'alternate-subcategory': {
-      if (!category || !(category in ALTERNATE_SUBCATEGORIES)) {
+      if (!category || !(category in CATEGORY_TO_ALTERNATE_SUBCATEGORY)) {
         throw new Error(`Category ${category} does not have alternate subcategories.`);
       }
       const index = naiveBayesClassify(
@@ -67,11 +69,11 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
         CLASSIFIER_ALTERNATE_SUBCATEGORY.word_to_alternate_subcategory[category],
         CLASSIFIER_ALTERNATE_SUBCATEGORY.alternate_subcategory_frequencies[category]
       );
-      return ALTERNATE_SUBCATEGORIES[category][index];
+      return CATEGORY_TO_ALTERNATE_SUBCATEGORY[category][index];
     }
 
     case 'subsubcategory': {
-      if (!subcategory || !(subcategory in SUBSUBCATEGORIES)) {
+      if (!subcategory || !(subcategory in SUBCATEGORY_TO_SUBSUBCATEGORY)) {
         throw new Error(`Subcategory ${subcategory} does not have subsubcategories.`);
       }
       const index = naiveBayesClassify(
@@ -79,7 +81,7 @@ export function classifyText (text, { mode = 'subcategory', category = '', subca
         CLASSIFIER_SUBSUBCATEGORY.word_to_subsubcategory[subcategory],
         CLASSIFIER_SUBSUBCATEGORY.subsubcategory_frequencies[subcategory]
       );
-      return SUBSUBCATEGORIES[subcategory][index];
+      return SUBCATEGORY_TO_SUBSUBCATEGORY[subcategory][index];
     }
   }
 }
