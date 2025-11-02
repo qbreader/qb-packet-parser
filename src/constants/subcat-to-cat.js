@@ -28,7 +28,6 @@ const SUBCAT_TO_CAT = {
   'Other Science': 'Science',
   Painting: 'Fine Arts',
   Sculpture: 'Fine Arts',
-  Music: 'Fine Arts',
   'Other Arts': 'Fine Arts',
   Architecture: 'Fine Arts',
   Dance: 'Fine Arts',
@@ -53,6 +52,11 @@ const SUBCAT_TO_CAT = {
   'Current Events': 'Current Events',
   Geography: 'Geography',
   'Other Academic': 'Other Academic',
-  Trash: 'Trash'
+  Movies: 'Pop Culture',
+  Music: 'Pop Culture',
+  Sports: 'Pop Culture',
+  Television: 'Pop Culture',
+  'Video Games': 'Pop Culture',
+  'Other Pop Culture': 'Pop Culture'
 };
 export default SUBCAT_TO_CAT;
