@@ -59,5 +59,6 @@ export function removeFormatting (text, includeItalics = false, sanitizeString =
     .replace(/[\u2026]/g, '...')
     .replace(/[\u2032-\u2037]/g, '\'')
     .replace(/[\u00B7\u22C5\u2027]/g, '') // interpuncts
-    .replace(/\u0142/g, 'l'); // ł -> l
+    .replace(/\u0142/g, 'l') // ł -> l
+    .replace(/\u00F8/g, 'o'); // ø -> o
 }
