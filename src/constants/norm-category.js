@@ -12,7 +12,7 @@ const NORM_CATEGORY = {
   'Current Events': [],
   Geography: [],
   'Other Academic': [],
-  'Pop Culture': []
+  'Pop Culture': ['Trash']
 };
 
 export default invertMapping(NORM_CATEGORY, true);
