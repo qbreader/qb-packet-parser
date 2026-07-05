@@ -66,7 +66,7 @@ export function preprocessPacket (text) {
   // Handle nonstandard question numbering
   text = text.replace(/^\(?(\d{1,2}|TB)\)/g, '1. ');
   text = text.replace(/^(TB|X|Tiebreaker|Extra)[.:]?/g, '21.');
-  text = text.replace(/^(T|S|TU)\d{1,2}[.:]?/g, '21.');
+  text = text.replace(/^(T|S|TU|B)\d{1,2}[.:]?/g, '21.');
 
   // Handle nonstandard bonus part numbering
   text = text.replace(/^[ABC][.:] */g, '[10] ');
