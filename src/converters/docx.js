@@ -1,4 +1,7 @@
+import fs from 'fs/promises';
 import mammoth from 'mammoth';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 
 /**
  * Convert a .docx file to a string compatible with the parser.
@@ -49,3 +52,29 @@ export default async function convertDocx (input) {
     .replaceAll('&nbsp;', ' ')
     .replaceAll('&#39;', "'");
 }
+
+async function main () {
+  const argv = yargs(hideBin(process.argv))
+    .command('$0 <filename>', 'Convert a .docx file to a string compatible with the parser', (yargs) => {
+      yargs.positional('filename', {
+        describe: 'The path to the .docx file to convert',
+        type: 'string'
+      });
+    })
+    .help()
+    .argv;
+
+  const filename = argv.filename;
+  if (typeof filename !== 'string') {
+    throw new Error('Missing filename argument');
+  }
+
+  const text = await convertDocx({ path: filename });
+  const outputFilename = filename.replace(/\.docx$/i, '.txt');
+  await fs.writeFile(outputFilename, text.endsWith('\n') ? text : `${text}\n`);
+  console.log(`Converted ${filename} -> ${outputFilename}`);
+}
+
+let works;
+try { works = process.argv[1] === import.meta?.filename; } catch (e) { works = false; }
+if (works) { main(); }
