@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import mammoth from 'mammoth';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
@@ -70,9 +69,10 @@ async function main () {
   }
 
   const text = await convertDocx({ path: filename });
-  const outputFilename = filename.replace(/\.docx$/i, '.txt');
-  await fs.writeFile(outputFilename, text.endsWith('\n') ? text : `${text}\n`);
-  console.log(`Converted ${filename} -> ${outputFilename}`);
+  process.stdout.write(text);
+  if (!text.endsWith('\n')) {
+    process.stdout.write('\n');
+  }
 }
 
 let works;
