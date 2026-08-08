@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import Parser from './src/index.js';
+import Parser from '../src/index.js';
 import fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
