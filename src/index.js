@@ -442,7 +442,13 @@ export default class Parser {
       category = tempCategory;
       subcategory = tempSubcategory;
 
-      if (this.hasCategoryTags && !alternateSubcategory) {
+      // In MODAQ mode, only the metadata is written to the output - the category and
+      // subcategory are dropped. If the question already has a tag, that tag's text is
+      // used as the metadata verbatim, so the classification has no effect on the output
+      // and warning about it is only confusing.
+      const classificationAffectsOutput = !(this.modaq && metadata);
+
+      if (this.hasCategoryTags && !alternateSubcategory && classificationAffectsOutput) {
         this.warn(`${type} ${index} classified as ${category} - ${subcategory}`);
       }
 
