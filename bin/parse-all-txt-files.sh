@@ -1,5 +1,15 @@
 #!/bin/bash
 
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help)
+            echo "Printing help for parse-txt-file.js..."
+            ./bin/parse-txt-file.js --help
+            exit 0
+            ;;
+    esac
+done
+
 mkdir -p output
 
 find packets -maxdepth 1 -type f -name '*.txt' -print0 | while IFS= read -r -d '' filename; do
