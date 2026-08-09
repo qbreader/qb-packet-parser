@@ -1,11 +1,12 @@
-The qbreader packet parser (https://github.com/qbreader/packet-parser), but in javascript.
+The qbreader packet parser, written in javascript.
 
 # Usage
 
-A small demonstration is included in `index.js` in the root of this repository.
-To use it, download the zip file of [2025 ACF Regionals](https://collegiate.quizbowlpackets.com/3210/) that contains .docx files,
-and rename the extracted folder to `p-docx` and place it in the root of this repository.
-Then, the output will appear in a newly created `output/` folder.
+## Local
+
+1. Run `./bin/download-set.sh` and follow the prompts to download a set.
+2. Run `./bin/convert-to-txt.sh`
+3. Run `./bin/parse-all-txt-files.sh`
 
 ## Browser
 
@@ -14,12 +15,12 @@ Load the Parser class directly from `dist/main.browser.mjs` like so:
 ```js
 import Parser from "https://cdn.jsdelivr.net/npm/qb-packet-parser/dist/main.browser.mjs";
 const parser = new Parser({ hasCategoryTags: true, hasQuestionNumbers: true });
+// file-input is a <input type="file" id="file-input>
+const file = document.getElementById('file-input').files[0];
+const arrayBuffer = await file.arrayBuffer();
+// data contains the parsed packet in JSON form
+const { data, warnings } = await parser.parseDocxPacket(arrayBuffer, file.name);
 ```
-
-## NodeJS
-
-Load the Parser class directly from `src/index.js`, or use `dist/main.node.mjs`.
-See `./index.js` for an example.
 
 # Build
 
