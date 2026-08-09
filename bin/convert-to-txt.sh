@@ -20,8 +20,8 @@ for filename in p-$TYPE/*.$TYPE; do
     counter=$((counter+1))
     BASENAME=$(echo "${filename}" | cut -d'/' -f 2)
     case $TYPE in
-        pdf) python3 src/converters/pdf-to-docx.py "$filename" && node src/converters/docx.js "${filename%.pdf}.docx" > "packets/${BASENAME%.pdf}.txt";;
-        docx) node src/converters/docx.js "${filename}" > "packets/${BASENAME%.docx}.txt" ;;
+        pdf) python3 src/converters/pdf-to-docx.py "$filename" && node bin/convert-docx-to-txt.js "${filename%.pdf}.docx" > "packets/${BASENAME%.pdf}.txt";;
+        docx) node bin/convert-docx-to-txt.js "${filename}" > "packets/${BASENAME%.docx}.txt" ;;
     esac
 done
 echo "Parsed ${counter} ${TYPE}s."
