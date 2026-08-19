@@ -31,7 +31,7 @@ export default class Parser {
     modaq = false,
     noQuestionUnderlining = false,
     spacePowermarks = false,
-    verbose = false
+    verbose = true
   }) {
     this.hasCategoryTags = hasCategoryTags;
     this.hasQuestionNumbers = hasQuestionNumbers;
