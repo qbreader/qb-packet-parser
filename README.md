@@ -51,7 +51,7 @@ camelCase (`--constantSubcategory`) or kebab-case (`--constant-subcategory`) for
 
 Booleans default to `true` when passed as a bare flag and can be negated with the `--no-` prefix,
 so `--no-hasCategoryTags` is equivalent to `--hasCategoryTags false`.
-Run `./bin/parse-txt-file.js --help` for the allowed values of the `--constant*` options.
+Run `./bin/parse-txt-file.js --help` to see all flags
 
 `./bin/parse-all-txt-files.sh` parses every `.txt` file in `packets/` into `output/`, and forwards
 any extra arguments to `parse-txt-file.js`:
