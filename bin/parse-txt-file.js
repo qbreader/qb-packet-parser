@@ -30,7 +30,7 @@ async function main () {
 
   const parser = new Parser({ hasCategoryTags: argv.hasCategoryTags, hasQuestionNumbers: argv.hasQuestionNumbers });
   try {
-    const { data, warnings } = await parser.parsePacket(fs.readFileSync(argv.filename, 'utf8'));
+    const { data, warnings } = await parser.parsePacket(fs.readFileSync(argv.filename, 'utf8'), argv.filename);
     console.log(JSON.stringify(data, null, 4));
     if (warnings.length > 0) { console.warn(warnings); }
   } catch (e) {

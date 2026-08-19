@@ -519,7 +519,7 @@ export default class Parser {
     }
 
     if (name) {
-      console.log(`Found ${tossups.length.toString().padStart(2)} tossups and ${bonuses.length.toString().padStart(2)} bonuses in ${name}`);
+      this.warn(`Found ${tossups.length.toString().padStart(2)} tossups and ${bonuses.length.toString().padStart(2)} bonuses in ${name}`);
     }
 
     const data = {
