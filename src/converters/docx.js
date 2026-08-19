@@ -22,6 +22,7 @@ export default async function convertDocx (input) {
         'i => i',
         'u => u'
       ],
+      convertImage: () => [],
       includeDefaultStyleMap: false,
       includeEmbeddedStyleMap: false,
       ignoreEmptyParagraphs: false
