@@ -22,6 +22,26 @@ const arrayBuffer = await file.arrayBuffer();
 const { data, warnings } = await parser.parseDocxPacket(arrayBuffer, file.name);
 ```
 
+## Command line
+
+`./bin/parse-txt-file.js` parses a single `.txt` file and prints the resulting JSON to stdout.
+Every parameter of the `Parser` constructor is available as a command line option.
+Run `./bin/parse-txt-file.js --help` to see all flags.
+
+```
+./bin/parse-txt-file.js packets/packet.txt [options]
+```
+
+Booleans default to `true` when passed as a bare flag and can be negated with the `--no-` prefix,
+so `--no-hasCategoryTags` is equivalent to `--hasCategoryTags false`.
+
+`./bin/parse-all-txt-files.sh` parses every `.txt` file in `packets/` into `output/`, and forwards
+any extra arguments to `parse-txt-file.js`:
+
+```
+./bin/parse-all-txt-files.sh --modaq --no-verbose
+```
+
 # Build
 
 Build from `src` using `npm run build`.
