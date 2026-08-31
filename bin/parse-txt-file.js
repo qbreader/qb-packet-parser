@@ -44,7 +44,7 @@ const PARSER_OPTIONS = {
     alias: 'p',
     describe: 'Insert powermarks into questions that are bolded in power but have no explicit powermark',
     type: 'boolean',
-    default: false
+    default: true
   },
   bonusLength: {
     alias: 'e',

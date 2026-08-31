@@ -21,7 +21,7 @@ export default class Parser {
     hasCategoryTags,
     hasQuestionNumbers,
     alwaysClassify = false,
-    autoInsertPowermarks = false,
+    autoInsertPowermarks = true,
     bonusLength = 3,
     buzzpoints = false,
     constantCategory = '',
