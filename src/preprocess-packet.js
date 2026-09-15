@@ -18,6 +18,9 @@ export function preprocessPacket (text) {
   // Change Greek question mark to semicolon
   text = text.replace(/\u037e/g, ';');
 
+  // remove html anchor tags
+  text = text.replace(/<a\s+[^>]*=[^>]*>/gi, '').replace(/<\/a>/gi, '');
+
   text = text
     .replace(/\u00a0/g, ' ')
     .replace(/ {\/bu}/g, '{/bu} ')
