@@ -24,3 +24,5 @@ wget -nv -A.$TYPE -r --span-hosts --domains=$URL,"files.quizbowlpackets.com" "ht
 mv "files.quizbowlpackets.com/${SET}" "p-$TYPE"
 rm -r "files.quizbowlpackets.com"
 rm -r $URL
+
+source bin/convert-to-txt.sh
